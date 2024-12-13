@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: TesteFarolShopping
+  datasource:
+    url: jdbc:postgresql://localhost:5433/db_farol
+    username: root
+    password: root
+    driver-class-name: org.postgresql.Driver
