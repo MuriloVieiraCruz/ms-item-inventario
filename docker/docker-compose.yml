@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  postgres:
+    container_name: postgres_farol
+    image: postgres:10
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: db_farol
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
