@@ -2,6 +2,8 @@ package com.murilo.TesteFarolShopping.repositories;
 
 import com.murilo.TesteFarolShopping.domains.ItemInventario;
 import com.murilo.TesteFarolShopping.domains.enums.Status;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -19,4 +21,6 @@ public interface ItemInventarioRepository extends JpaRepository<ItemInventario, 
     Optional<ItemInventario> findByCodigo(String codigo);
 
     Optional<ItemInventario> findByIdAndStatus(Long id, Status status);
+
+    Page<ItemInventario> findAllByStatus(Status status, Pageable paginacao);
 }

@@ -63,7 +63,7 @@ public class ItemInventarioService {
 
     @Transactional(readOnly = true)
     public Page<ItemInventario> findAll(Pageable paginacao) {
-        return itemInventarioRepository.findAll(paginacao);
+        return itemInventarioRepository.findAllByStatus(Status.ATIVO, paginacao);
     }
 
     @Transactional(rollbackFor = Exception.class)
