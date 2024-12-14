@@ -8,6 +8,9 @@ import com.murilo.TesteFarolShopping.dtos.ItemInventarioSaveRequestDTO;
 import com.murilo.TesteFarolShopping.dtos.ItemInventarioUpdateRequestDTO;
 import com.murilo.TesteFarolShopping.mapper.ItemInventarioMapper;
 import com.murilo.TesteFarolShopping.repositories.ItemInventarioRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,6 +59,11 @@ public class ItemInventarioService {
         Optional<ItemInventario> itemExistente = itemInventarioRepository.findByIdAndStatus(itemId, Status.ATIVO);
         Preconditions.checkArgument(itemExistente.isPresent(), "O item informado não existe");
         return itemExistente.get();
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ItemInventario> findAll(Pageable paginacao) {
+        return itemInventarioRepository.findAll(paginacao);
     }
 
     @Transactional(rollbackFor = Exception.class)

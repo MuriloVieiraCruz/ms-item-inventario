@@ -5,11 +5,15 @@ import com.murilo.TesteFarolShopping.dtos.ItemInventarioSaveRequestDTO;
 import com.murilo.TesteFarolShopping.dtos.ItemInventarioUpdateRequestDTO;
 import com.murilo.TesteFarolShopping.mapper.ItemInventarioMapper;
 import com.murilo.TesteFarolShopping.services.ItemInventarioService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/item-inventario")
@@ -34,6 +38,18 @@ public class ItemInventarioController {
     @GetMapping("/{itemId}")
     public ResponseEntity<ItemInventarioResponseDTO> findById(@PathVariable("itemId") Long itemId) {
         return ResponseEntity.status(HttpStatus.OK).body(ItemInventarioMapper.toItemInventarioResponse(itemInventarioService.findById(itemId)));
+    }
+
+    @GetMapping("/listAll")
+    public ResponseEntity<Page<ItemInventarioResponseDTO>> findAll(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new PageImpl<>(itemInventarioService.findAll(PageRequest.of(page, size)).stream()
+                        .map(ItemInventarioMapper::toItemInventarioResponse)
+                        .collect(Collectors.toList()))
+        );
     }
 
     @DeleteMapping("/{itemId}")
