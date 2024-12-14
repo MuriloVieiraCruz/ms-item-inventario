@@ -13,14 +13,14 @@ public enum Disponibilidade {
         this.descricaoFormatada = descricaoFormatada;
     }
 
-    public static Disponibilidade encontrarPeloCodigo(int codigo) {
+    public static Disponibilidade encontrarPelaDescricao(char descricaoFormatada) {
         for (Disponibilidade disponibilidade : Disponibilidade.values()) {
-            if (disponibilidade.getCodigo() == codigo) {
+            if (disponibilidade.getDescricaoFormatada() == descricaoFormatada) {
                 return disponibilidade;
             }
         }
 
-        throw new IllegalArgumentException("Disponibilidade inexistente: " + codigo);
+        throw new IllegalArgumentException("Disponibilidade inexistente: " + descricaoFormatada + ", informar I para indisponível ou D para disponível");
     }
 
     public int getCodigo() {

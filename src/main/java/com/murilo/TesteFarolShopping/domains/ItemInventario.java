@@ -2,19 +2,24 @@ package com.murilo.TesteFarolShopping.domains;
 
 import com.murilo.TesteFarolShopping.domains.enums.Disponibilidade;
 import com.murilo.TesteFarolShopping.domains.enums.Status;
+import org.checkerframework.common.aliasing.qual.Unique;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Table(name = "tb_item_inventario")
 @Entity
-public class ItemInventario {
+public class ItemInventario implements Serializable {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Unique
     private String codigo;
-    private Integer numeroSerie;
+    private String numeroSerie;
     private Disponibilidade disponibilidade;
     private Status status;
     private String descricao;
@@ -24,7 +29,7 @@ public class ItemInventario {
     public ItemInventario() {
     }
 
-    public ItemInventario(Long id, String codigo, Integer numeroSerie, Disponibilidade disponibilidade, Status status, String descricao, String localizacao, LocalDateTime dataMovimentacao) {
+    public ItemInventario(Long id, String codigo, String numeroSerie, Disponibilidade disponibilidade, Status status, String descricao, String localizacao, LocalDateTime dataMovimentacao) {
         this.id = id;
         this.codigo = codigo;
         this.numeroSerie = numeroSerie;
@@ -33,6 +38,17 @@ public class ItemInventario {
         this.descricao = descricao;
         this.localizacao = localizacao;
         this.dataMovimentacao = dataMovimentacao;
+    }
+
+    public ItemInventario(Builder builder) {
+        this.id = builder.id;
+        this.codigo = builder.codigo;
+        this.numeroSerie = builder.numeroSerie;
+        this.disponibilidade = builder.disponibilidade;
+        this.status = builder.status;
+        this.descricao = builder.descricao;
+        this.localizacao = builder.localizacao;
+        this.dataMovimentacao = builder.dataMovimentacao;
     }
 
     public Long getId() {
@@ -51,11 +67,11 @@ public class ItemInventario {
         this.codigo = codigo;
     }
 
-    public Integer getNumeroSerie() {
+    public String getNumeroSerie() {
         return numeroSerie;
     }
 
-    public void setNumeroSerie(Integer numeroSerie) {
+    public void setNumeroSerie(String numeroSerie) {
         this.numeroSerie = numeroSerie;
     }
 
@@ -119,5 +135,60 @@ public class ItemInventario {
         result = 31 * result + Objects.hashCode(localizacao);
         result = 31 * result + Objects.hashCode(dataMovimentacao);
         return result;
+    }
+
+    public static class Builder {
+        private Long id;
+        private String codigo;
+        private String numeroSerie;
+        private Disponibilidade disponibilidade;
+        private Status status;
+        private String descricao;
+        private String localizacao;
+        private LocalDateTime dataMovimentacao;
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder codigo(String codigo) {
+            this.codigo = codigo;
+            return this;
+        }
+
+        public Builder numeroSerie(String numeroSerie) {
+            this.numeroSerie = numeroSerie;
+            return this;
+        }
+
+        public Builder disponibilidade(Disponibilidade disponibilidade) {
+            this.disponibilidade = disponibilidade;
+            return this;
+        }
+
+        public Builder status(Status status) {
+            this.status = status;
+            return this;
+        }
+
+        public Builder descricao(String descricao) {
+            this.descricao = descricao;
+            return this;
+        }
+
+        public Builder localizacao(String localizacao) {
+            this.localizacao = localizacao;
+            return this;
+        }
+
+        public Builder dataMovimentacao(LocalDateTime dataMovimentacao) {
+            this.dataMovimentacao = dataMovimentacao;
+            return this;
+        }
+
+        public ItemInventario build() {
+            return new ItemInventario(this);
+        }
     }
 }
