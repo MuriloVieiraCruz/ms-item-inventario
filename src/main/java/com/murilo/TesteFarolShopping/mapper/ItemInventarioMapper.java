@@ -38,7 +38,7 @@ public class ItemInventarioMapper {
                 dataMovimentacaoFormatada);
     }
 
-    public static ItemInventario mapeiaValoresItemInventario(ItemInventarioUpdateRequestDTO updateRequestDTO, ItemInventario itemInventario) {
+    public static ItemInventario mapearValoresItemInventario(ItemInventarioUpdateRequestDTO updateRequestDTO, ItemInventario itemInventario) {
         itemInventario.setCodigo(updateRequestDTO.getCodigo());
         itemInventario.setDisponibilidade(Disponibilidade.encontrarPelaDescricao(updateRequestDTO.getDisponibilidade()));
         itemInventario.setDescricao(updateRequestDTO.getDescricao());

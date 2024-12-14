@@ -11,6 +11,8 @@ import com.murilo.TesteFarolShopping.repositories.ItemInventarioRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -34,15 +36,17 @@ public class ItemInventarioService {
 
         ItemInventario itemInventario = ItemInventarioMapper.toItemInventario(itemRequestDTO);
         itemInventario.setNumeroSerie(numeroSerie);
+        validarDataMovimentacao(itemInventario.getDataMovimentacao());
         return itemInventarioRepository.save(itemInventario);
     }
 
     @Transactional(rollbackFor = Exception.class)
     public ItemInventario update(ItemInventarioUpdateRequestDTO itemRequestDTO) {
-
         ItemInventario itemEncontrado = findById(itemRequestDTO.getId());
-        verificaCodigoItem(itemRequestDTO);
-        return ItemInventarioMapper.mapeiaValoresItemInventario(itemRequestDTO, itemEncontrado);
+        validarCodigoItem(itemRequestDTO);
+        ItemInventario itemAtualizado = ItemInventarioMapper.mapearValoresItemInventario(itemRequestDTO, itemEncontrado);
+        validarDataMovimentacao(itemAtualizado.getDataMovimentacao());
+        return itemAtualizado;
     }
 
     @Transactional(readOnly = true)
@@ -81,8 +85,14 @@ public class ItemInventarioService {
         return String.format("%05d", proximoNumero);
     }
 
-    private void verificaCodigoItem(ItemInventarioUpdateRequestDTO item) {
+    private void validarCodigoItem(ItemInventarioUpdateRequestDTO item) {
         Optional<ItemInventario> itemCarregado = itemInventarioRepository.findByCodigo(item.getCodigo());
         itemCarregado.ifPresent(itemInventario -> Preconditions.checkArgument(itemInventario.getId().equals(item.getId()), "O código informado já existe em outro item de inventario"));
+    }
+    
+    private void validarDataMovimentacao(LocalDateTime dataMovimentacao) {
+        LocalDate dataAtual = LocalDate.now();
+
+        Preconditions.checkArgument(!dataMovimentacao.toLocalDate().isBefore(dataAtual), "A data de movimentação não pode ser anterior a atual");
     }
 }
