@@ -1,5 +1,6 @@
 package com.murilo.TesteFarolShopping.controllers;
 
+import com.murilo.TesteFarolShopping.domains.ItemInventario;
 import com.murilo.TesteFarolShopping.dtos.ItemInventarioResponseDTO;
 import com.murilo.TesteFarolShopping.dtos.ItemInventarioSaveRequestDTO;
 import com.murilo.TesteFarolShopping.dtos.ItemInventarioUpdateRequestDTO;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -45,10 +47,13 @@ public class ItemInventarioController {
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "10") int size
     ) {
+        Page<ItemInventario> paginaOriginal = itemInventarioService.findAll(PageRequest.of(page, size));
+        List<ItemInventarioResponseDTO> dtoList = paginaOriginal.getContent().stream()
+                .map(ItemInventarioMapper::toItemInventarioResponse)
+                .collect(Collectors.toList());
+
         return ResponseEntity.status(HttpStatus.OK).body(
-                new PageImpl<>(itemInventarioService.findAll(PageRequest.of(page, size)).stream()
-                        .map(ItemInventarioMapper::toItemInventarioResponse)
-                        .collect(Collectors.toList()))
+                new PageImpl<>(dtoList, paginaOriginal.getPageable(), paginaOriginal.getTotalElements())
         );
     }
 
