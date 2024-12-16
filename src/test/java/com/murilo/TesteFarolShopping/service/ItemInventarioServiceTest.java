@@ -83,7 +83,7 @@ public class ItemInventarioServiceTest {
         }
 
         @Test
-        void casoItemInseridoComCodigoExistente() throws Exception {
+        void casoItemInseridoComCodigoExistente() {
             when(itemInventarioRepository.existsByCodigo(
                     eq(existCodigo)
             )).thenReturn(true);
@@ -96,7 +96,7 @@ public class ItemInventarioServiceTest {
         }
 
         @Test
-        void casoItemInseridoComCodigoExcedendoCaracteres() throws Exception {
+        void casoItemInseridoComCodigoExcedendoCaracteres() {
             itemInventarioSaveRequestDTO.setCodigo("1234567a");
 
             when(itemInventarioRepository.existsByCodigo(
@@ -110,7 +110,7 @@ public class ItemInventarioServiceTest {
         }
 
         @Test
-        void casoItemInseridoComDescricaoExcedendoCaracteres() throws Exception {
+        void casoItemInseridoComDescricaoExcedendoCaracteres() {
             itemInventarioSaveRequestDTO.setDescricao("a".repeat(101));
 
             when(itemInventarioRepository.existsByCodigo(
@@ -124,7 +124,7 @@ public class ItemInventarioServiceTest {
         }
 
         @Test
-        void casoItemInseridoComLocalizacaoExcedendoCaracteres() throws Exception {
+        void casoItemInseridoComLocalizacaoExcedendoCaracteres() {
             itemInventarioSaveRequestDTO.setLocalizacao("a".repeat(251));
 
             when(itemInventarioRepository.existsByCodigo(
@@ -213,7 +213,7 @@ public class ItemInventarioServiceTest {
         }
 
         @Test
-        void casoItemInseridoComCodigoExistente() throws Exception {
+        void casoItemInseridoComCodigoExistente() {
             ItemInventario itemExistente = new ItemInventario();
             itemExistente.setId(50L);
             itemExistente.setCodigo(itemInventarioUpdateRequestDTO.getCodigo());
@@ -236,7 +236,7 @@ public class ItemInventarioServiceTest {
         }
 
         @Test
-        void casoItemInseridoComCodigoExcedendoCaracteres() throws Exception {
+        void casoItemInseridoComCodigoExcedendoCaracteres() {
             itemInventarioUpdateRequestDTO.setCodigo("1234567a");
 
             when(itemInventarioRepository.findByIdAndStatus(
@@ -257,7 +257,7 @@ public class ItemInventarioServiceTest {
         }
 
         @Test
-        void casoItemInseridoComDescricaoExcedendoCaracteres() throws Exception {
+        void casoItemInseridoComDescricaoExcedendoCaracteres() {
             itemInventarioUpdateRequestDTO.setDescricao("a".repeat(101));
 
             when(itemInventarioRepository.findByIdAndStatus(
@@ -278,7 +278,7 @@ public class ItemInventarioServiceTest {
         }
 
         @Test
-        void casoItemInseridoComLocalizacaoExcedendoCaracteres() throws Exception {
+        void casoItemInseridoComLocalizacaoExcedendoCaracteres() {
             itemInventarioUpdateRequestDTO.setLocalizacao("a".repeat(251));
 
             when(itemInventarioRepository.findByIdAndStatus(

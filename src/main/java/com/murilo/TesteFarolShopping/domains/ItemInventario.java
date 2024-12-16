@@ -2,7 +2,6 @@ package com.murilo.TesteFarolShopping.domains;
 
 import com.murilo.TesteFarolShopping.domains.enums.Disponibilidade;
 import com.murilo.TesteFarolShopping.domains.enums.Status;
-import org.checkerframework.common.aliasing.qual.Unique;
 
 import javax.persistence.*;
 import java.io.Serializable;
