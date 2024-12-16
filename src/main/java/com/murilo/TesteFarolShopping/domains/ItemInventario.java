@@ -14,10 +14,10 @@ import java.util.Objects;
 public class ItemInventario implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Unique
+    @Column(unique = true)
     private String codigo;
     private String numeroSerie;
     private Disponibilidade disponibilidade;

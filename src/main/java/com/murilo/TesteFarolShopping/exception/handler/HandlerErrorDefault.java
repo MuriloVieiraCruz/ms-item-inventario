@@ -4,12 +4,14 @@ import com.fasterxml.jackson.databind.exc.InvalidDefinitionException;
 import com.murilo.TesteFarolShopping.exception.ErroDaApi;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
@@ -126,16 +128,15 @@ public class HandlerErrorDefault {
 	    		"Ocorreu um erro de integridade referencial na base de dados");
 	}
 
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
-		Map<String, String> errors = new HashMap<>();
+	public Map<String, Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
+		String mensagemErro = null;
 
-		ex.getBindingResult().getFieldErrors().forEach(error -> {
-			errors.put("codigo", ErroDaApi.CAMPO_INVALIDO.getCodigo());
-			errors.put("mensagem", error.getDefaultMessage());
-		});
-
-		return ResponseEntity.badRequest().body(errors);
+		for (FieldError mensagem : ex.getBindingResult().getFieldErrors()) {
+			mensagemErro = mensagem.getDefaultMessage();
+		}
+		return criarMapDeErro(ErroDaApi.CAMPO_INVALIDO, mensagemErro);
 	}
 	
 	private Map<String, Object> criarMapDeErro(ErroDaApi erroDaApi, String msgDeErro){			

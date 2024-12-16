@@ -11,21 +11,26 @@ public class ItemInventarioUpdateRequestDTO implements Serializable {
     private Long id;
 
     @NotBlank(message = "O código é obrigatório")
-    @Size(max = 7, min = 1, message = "O código do item deve conter entre 1 e 7 caracteres")
     private String codigo;
 
     @NotNull(message = "A disponibilidade é obrigatória")
     private char disponibilidade;
 
     @NotBlank(message = "A descrição é obrigatória")
-    @Size(max = 100, min = 3, message = "A localização deve possuir entre 3 e 250 caracteres")
     private String descricao;
 
     @NotBlank(message = "A localização é obrigatória")
-    @Size(max = 250, min = 3, message = "A localização deve possuir entre 3 e 250 caracteres")
     private String localizacao;
 
     public ItemInventarioUpdateRequestDTO() {
+    }
+
+    public ItemInventarioUpdateRequestDTO(Long id, String codigo, char disponibilidade, String descricao, String localizacao) {
+        this.id = id;
+        this.codigo = codigo;
+        this.disponibilidade = disponibilidade;
+        this.descricao = descricao;
+        this.localizacao = localizacao;
     }
 
     public Long getId() {

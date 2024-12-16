@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -32,25 +31,23 @@ public class ItemInventarioService {
 
     @Transactional(rollbackFor = Exception.class)
     public ItemInventario create(ItemInventarioSaveRequestDTO itemRequestDTO) {
-        isCodigoExist(itemRequestDTO.getCodigo());
+        validarCodigoCriacaoItem(itemRequestDTO.getCodigo());
         String ultimoNumero = carregarUltimoNumeroSerie();
         String numeroSerie = gerarProximoNumeroSerie(ultimoNumero);
 
-        Preconditions.checkArgument(numeroSerie.matches("\\d{5}"), "Número de série inválido");
-
         ItemInventario itemInventario = ItemInventarioMapper.toItemInventario(itemRequestDTO);
         itemInventario.setNumeroSerie(numeroSerie);
-        validarDataMovimentacao(itemInventario.getDataMovimentacao());
+        validarCamposInventario(itemInventario);
         return itemInventarioRepository.save(itemInventario);
     }
 
     @Transactional(rollbackFor = Exception.class)
     public ItemInventario update(ItemInventarioUpdateRequestDTO itemRequestDTO) {
         ItemInventario itemEncontrado = findById(itemRequestDTO.getId());
-        validarCodigoItem(itemRequestDTO);
+        validarCodigoAlteracaoItem(itemRequestDTO);
         ItemInventario itemAtualizado = ItemInventarioMapper.mapearValoresItemInventario(itemRequestDTO, itemEncontrado);
-        validarDataMovimentacao(itemAtualizado.getDataMovimentacao());
-        return itemAtualizado;
+        validarCamposInventario(itemAtualizado);
+        return itemInventarioRepository.save(itemAtualizado);
     }
 
     @Transactional(readOnly = true)
@@ -64,7 +61,7 @@ public class ItemInventarioService {
 
     @Transactional(readOnly = true)
     public Page<ItemInventario> findAll(int page, int size) {
-        Pageable paginacao = criarPaginacao (page, size, "id", "asc");
+        Pageable paginacao = criarPaginacao(page, size);
         return itemInventarioRepository.findAllByStatus(Status.ATIVO, paginacao);
     }
 
@@ -76,7 +73,7 @@ public class ItemInventarioService {
         itemInventarioRepository.save(itemEncontrado);
     }
 
-    private void isCodigoExist(String codigo) {
+    private void validarCodigoCriacaoItem(String codigo) {
         boolean isCodigoExistente = itemInventarioRepository.existsByCodigo(codigo);
         Preconditions.checkArgument(!isCodigoExistente, "Já existe um item com o mesmo código");
     }
@@ -95,19 +92,41 @@ public class ItemInventarioService {
         return String.format("%05d", proximoNumero);
     }
 
-    private void validarCodigoItem(ItemInventarioUpdateRequestDTO item) {
+    private void validarCodigoAlteracaoItem(ItemInventarioUpdateRequestDTO item) {
         Optional<ItemInventario> itemCarregado = itemInventarioRepository.findByCodigo(item.getCodigo());
         itemCarregado.ifPresent(itemInventario -> Preconditions.checkArgument(itemInventario.getId().equals(item.getId()), "O código informado já existe em outro item de inventario"));
     }
-    
-    private void validarDataMovimentacao(LocalDateTime dataMovimentacao) {
-        LocalDate dataAtual = LocalDate.now();
 
-        Preconditions.checkArgument(!dataMovimentacao.toLocalDate().isBefore(dataAtual), "A data de movimentação não pode ser anterior a atual");
+    private Pageable criarPaginacao(int page, int size) {
+        Sort ordenacao = Sort.by(Sort.Direction.fromString("asc"), "id");
+        return PageRequest.of(page, size, ordenacao);
     }
 
-    private Pageable criarPaginacao(int page, int size, String campoOrdenacao, String tipoOrdenacao) {
-        Sort ordenacao = Sort.by(Sort.Direction.fromString(tipoOrdenacao), campoOrdenacao);
-        return PageRequest.of(page, size, ordenacao);
+    private void validarCamposInventario(ItemInventario itemInventario) {
+        Preconditions.checkArgument(
+                itemInventario.getCodigo() != null
+                        && !itemInventario.getCodigo().isEmpty()
+                        && itemInventario.getCodigo().length() <= 7,
+                "O código do item deve conter entre 1 e 7 caracteres"
+        );
+
+        Preconditions.checkArgument(
+                itemInventario.getDescricao() != null
+                        && itemInventario.getDescricao().length() >= 3
+                        && itemInventario.getDescricao().length() <= 100,
+                "A descrição deve possuir entre 3 e 100 caracteres"
+        );
+
+        Preconditions.checkArgument(
+                itemInventario.getLocalizacao() != null
+                        && itemInventario.getLocalizacao().length() >= 3
+                        && itemInventario.getLocalizacao().length() <= 250,
+                "A localização deve possuir entre 3 e 250 caracteres"
+        );
+
+        Preconditions.checkArgument(itemInventario.getNumeroSerie().matches("\\d{5}"), "Número de série inválido");
+
+        LocalDate dataAtual = LocalDate.now();
+        Preconditions.checkArgument(!itemInventario.getDataMovimentacao().toLocalDate().isBefore(dataAtual), "A data de movimentação não pode ser anterior a atual");
     }
 }

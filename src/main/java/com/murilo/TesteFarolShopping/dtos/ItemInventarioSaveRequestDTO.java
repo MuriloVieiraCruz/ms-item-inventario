@@ -7,18 +7,21 @@ import java.io.Serializable;
 public class ItemInventarioSaveRequestDTO implements Serializable {
 
     @NotBlank(message = "O código é obrigatório")
-    @Size(max = 7, min = 1, message = "O código do item deve conter entre 1 e 7 caracteres")
     private String codigo;
 
     @NotBlank(message = "A descrição é obrigatória")
-    @Size(max = 100, min = 3, message = "A descrição deve possuir entre 3 e 100 caracteres")
     private String descricao;
 
     @NotBlank(message = "A localização é obrigatória")
-    @Size(max = 250, min = 3, message = "A localização deve possuir entre 3 e 250 caracteres")
     private String localizacao;
 
     public ItemInventarioSaveRequestDTO() {
+    }
+
+    public ItemInventarioSaveRequestDTO(String codigo, String descricao, String localizacao) {
+        this.codigo = codigo;
+        this.descricao = descricao;
+        this.localizacao = localizacao;
     }
 
     public String getCodigo() {
