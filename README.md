@@ -65,3 +65,9 @@ docker compose up -d
 ```
 mvn spring-boot:run
 ```
+
+### Collection do Postman para realizar as requisições:
+[teste_farol_collection.zip](https://github.com/user-attachments/files/18143981/teste_farol_collection.zip)
+
+### Front-end para integração com o back-end:
+[front-ms-item-inventario](https://github.com/MuriloVieiraCruz/front-ms-item-inventario)
