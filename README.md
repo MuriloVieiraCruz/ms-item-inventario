@@ -66,6 +66,12 @@ docker compose up -d
 mvn spring-boot:run
 ```
 
+### Executar os testes da aplicação:
+
+```
+mvn test
+```
+
 ### Collection do Postman para realizar as requisições:
 [teste_farol_collection.zip](https://github.com/user-attachments/files/18143981/teste_farol_collection.zip)
 
