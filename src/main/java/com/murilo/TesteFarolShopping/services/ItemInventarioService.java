@@ -11,6 +11,7 @@ import com.murilo.TesteFarolShopping.repositories.ItemInventarioRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,7 +63,8 @@ public class ItemInventarioService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ItemInventario> findAll(Pageable paginacao) {
+    public Page<ItemInventario> findAll(int page, int size) {
+        Pageable paginacao = criarPaginacao (page, size, "id", "asc");
         return itemInventarioRepository.findAllByStatus(Status.ATIVO, paginacao);
     }
 
@@ -102,5 +104,10 @@ public class ItemInventarioService {
         LocalDate dataAtual = LocalDate.now();
 
         Preconditions.checkArgument(!dataMovimentacao.toLocalDate().isBefore(dataAtual), "A data de movimentação não pode ser anterior a atual");
+    }
+
+    private Pageable criarPaginacao(int page, int size, String campoOrdenacao, String tipoOrdenacao) {
+        Sort ordenacao = Sort.by(Sort.Direction.fromString(tipoOrdenacao), campoOrdenacao);
+        return PageRequest.of(page, size, ordenacao);
     }
 }

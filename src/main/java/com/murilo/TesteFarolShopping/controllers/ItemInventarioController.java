@@ -9,6 +9,7 @@ import com.murilo.TesteFarolShopping.services.ItemInventarioService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,7 +48,7 @@ public class ItemInventarioController {
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "10") int size
     ) {
-        Page<ItemInventario> paginaOriginal = itemInventarioService.findAll(PageRequest.of(page, size));
+        Page<ItemInventario> paginaOriginal = itemInventarioService.findAll(page, size);
         List<ItemInventarioResponseDTO> dtoList = paginaOriginal.getContent().stream()
                 .map(ItemInventarioMapper::toItemInventarioResponse)
                 .collect(Collectors.toList());
