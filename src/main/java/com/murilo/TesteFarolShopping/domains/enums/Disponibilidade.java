@@ -14,9 +14,15 @@ public enum Disponibilidade {
     }
 
     public static Disponibilidade encontrarPelaDescricao(char descricaoFormatada) {
-        for (Disponibilidade disponibilidade : Disponibilidade.values()) {
-            if (disponibilidade.getDescricaoFormatada() == descricaoFormatada) {
-                return disponibilidade;
+        if (descricaoFormatada == '\u0000') {
+            throw new IllegalArgumentException("A disponibilidade é obrigatória");
+        }
+
+        if (!String.valueOf(descricaoFormatada).isBlank()) {
+            for (Disponibilidade disponibilidade : Disponibilidade.values()) {
+                if (disponibilidade.getDescricaoFormatada() == descricaoFormatada) {
+                    return disponibilidade;
+                }
             }
         }
 

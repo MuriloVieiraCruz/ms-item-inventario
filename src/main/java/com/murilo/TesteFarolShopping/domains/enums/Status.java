@@ -14,6 +14,10 @@ public enum Status {
     }
 
     public static Status encontrarPelaDescricao(char descricaoFormatada) {
+        if (descricaoFormatada == '\u0000') {
+            throw new IllegalArgumentException("O status é obrigatório");
+        }
+
         for (Status status : Status.values()) {
             if (status.getDescricaoFormatada() == descricaoFormatada) {
                 return status;
